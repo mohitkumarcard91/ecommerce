@@ -19,9 +19,9 @@ const OrderList = () => {
     }
   }, [dispatch, user?.email]);
 
-  useEffect(() => {
-    console.log("Orders updated:", orders);
-  }, [orders]);
+  // useEffect(() => {
+  //   console.log("Orders updated:", orders);
+  // }, [orders]);
 
   const cancelOrderHandler = (orderId) => {
     if (!window.confirm("Are you sure you want to cancel this order?")) return;

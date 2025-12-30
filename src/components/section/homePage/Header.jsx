@@ -1,17 +1,11 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import {
-  Box,
-  Image,
-  IconButton,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Image, IconButton, Text, VStack } from "@chakra-ui/react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function Header() {
   const [products, setProducts] = useState([]);
-  const [index, setIndex] = useState(1); 
+  const [index, setIndex] = useState(1);
   const intervalRef = useRef(null);
 
   useEffect(() => {
@@ -30,11 +24,7 @@ export default function Header() {
 
   const slides =
     products.length > 0
-      ? [
-          products[products.length - 1],
-          ...products,
-          products[0],
-        ]
+      ? [products[products.length - 1], ...products, products[0]]
       : [];
 
   const startAutoScroll = () => {
@@ -65,7 +55,8 @@ export default function Header() {
   const prev = () => setIndex((i) => i - 1);
 
   return (
-    <Box className="mb-3"
+    <Box
+      className="mb-3"
       position="relative"
       w="full"
       h="350px"
@@ -83,11 +74,7 @@ export default function Header() {
       >
         {slides.map((item, i) => (
           <Box key={i} minW="100%" h="100%">
-            <VStack
-              justify="center"
-              h="100%"
-              spacing={4}
-            >
+            <VStack justify="center" h="100%" spacing={4}>
               <Image
                 src={item.thumbnail}
                 alt={item.title}

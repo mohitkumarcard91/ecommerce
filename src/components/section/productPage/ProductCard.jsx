@@ -4,6 +4,8 @@ import { selectUser } from "../../../redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import ProductCardSkeleton from "./ProductCardSkeleton";
 
 export default function ProductCard({ product }) {
   const dispatch = useDispatch();
@@ -11,16 +13,9 @@ export default function ProductCard({ product }) {
   const user = useSelector(selectUser);
 
   const cartItems = useSelector((state) => state.products.cart);
+  const isInCart = user && cartItems?.some((item) => item.id === product.id);
 
-  if (!product) return null;
-
-
-
-const isInCart =
-  user &&
-  cartItems?.some(
-    (item) => item.id === product.id
-  );
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleAddtoCart = (e) => {
     e.stopPropagation();
@@ -35,51 +30,46 @@ const isInCart =
       return;
     }
 
-    dispatch(
-      addToCart({
-        userEmail: user.email,
-        product,
-      })
-    );
-
+    dispatch(addToCart({ userEmail: user.email, product }));
     toast.success("Item added to cart successfully!");
   };
 
-  const handleCardClick = () => { 
+  const handleCardClick = () => {
     navigate(`/product/${product.id}`);
   };
 
   const renderStars = (rating) => {
-    const stars = [];
     const roundedRating = Math.round(rating * 2) / 2;
-
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <Star
-          key={i}
-          size={16}
-          className={
-            i <= roundedRating
-              ? "text-yellow-400 fill-yellow-400"
-              : "text-gray-300"
-          }
-        />
-      );
-    }
-
-    return stars;
+    return Array.from({ length: 5 }).map((_, i) => (
+      <Star
+        key={i}
+        size={16}
+        className={
+          i + 1 <= roundedRating
+            ? "text-yellow-400 fill-yellow-400"
+            : "text-gray-300"
+        }
+      />
+    ));
   };
+
+  if (!product) return null;
 
   return (
     <div
       onClick={handleCardClick}
       className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white max-w-56 cursor-pointer hover:shadow-md transition"
     >
-      <div className="group flex items-center justify-center px-2">
+      <div className="group flex items-center justify-center px-2 relative">
+        {!imageLoaded && <ProductCardSkeleton />}
+
         <img
-          className="group-hover:scale-105 transition max-w-[160px]"
           src={product.images?.[0]}
           alt={product.title}
+          onLoad={() => setImageLoaded(true)}
+          className={`max-w-[160px] transition group-hover:scale-105 ${
+            imageLoaded ? "opacity-100" : "opacity-0"
+          }`}
         />
       </div>
 
