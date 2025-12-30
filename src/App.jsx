@@ -4,6 +4,7 @@ import { lazy, Suspense, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "./redux/slices/authSlice";
 import { loadUserData } from "./redux/slices/productSlice";
+import Loading from "./components/common/Loading";
 
 const Navbar = lazy(() => import("./components/common/Navbar"));
 const Footer = lazy(() => import("./components/common/Footer"));
@@ -25,7 +26,7 @@ const Successfull = lazy(() =>
 
 const Loader = () => (
   <div className="flex justify-center items-center h-screen text-lg">
-    Loading...
+    <Loading />
   </div>
 );
 

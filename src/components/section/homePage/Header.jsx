@@ -1,53 +1,131 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { Search, ShoppingCart, User } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import {
+  Box,
+  Image,
+  IconButton,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function Header() {
-  const [product, setProduct] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [index, setIndex] = useState(1); 
+  const intervalRef = useRef(null);
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchProducts = async () => {
       try {
-        const response = await axios.get(
-          "https://dummyjson.com/products?limit=1&skip=5&select=title,price,thumbnail"
+        const res = await axios.get(
+          "https://dummyjson.com/products?limit=5&skip=5&select=title,price,thumbnail"
         );
-
-        if (response.status === 200) {
-          setProduct(response.data.products[0]);
-        }
-      } catch (error) {
-        console.error(error);
+        setProducts(res.data.products);
+      } catch (err) {
+        console.error(err);
       }
     };
-
-    fetchProduct();
+    fetchProducts();
   }, []);
 
+  const slides =
+    products.length > 0
+      ? [
+          products[products.length - 1],
+          ...products,
+          products[0],
+        ]
+      : [];
+
+  const startAutoScroll = () => {
+    intervalRef.current = setInterval(() => {
+      setIndex((prev) => prev + 1);
+    }, 1000);
+  };
+
+  const stopAutoScroll = () => {
+    clearInterval(intervalRef.current);
+  };
+
+  useEffect(() => {
+    if (products.length) startAutoScroll();
+    return stopAutoScroll;
+  }, [products]);
+
+  const handleTransitionEnd = () => {
+    if (index === slides.length - 1) {
+      setIndex(1);
+    }
+    if (index === 0) {
+      setIndex(slides.length - 2);
+    }
+  };
+
+  const next = () => setIndex((i) => i + 1);
+  const prev = () => setIndex((i) => i - 1);
+
   return (
-    <header className="w-full bg-white shadow-md">
-      {product && (
-        <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white py-4">
-          <div className="w-[90%] mx-auto flex items-center gap-6">
-            <img
-              src={product.thumbnail}
-              alt={product.title}
-              className="h-20 w-28 object-cover rounded-lg"
-            />
+    <Box className="mb-3"
+      position="relative"
+      w="full"
+      h="350px"
+      overflow="hidden"
+      bg="gray.100"
+      onMouseEnter={stopAutoScroll}
+      onMouseLeave={startAutoScroll}
+    >
+      <Box
+        display="flex"
+        h="100%"
+        transform={`translateX(-${index * 100}%)`}
+        transition="transform 0.6s ease"
+        onTransitionEnd={handleTransitionEnd}
+      >
+        {slides.map((item, i) => (
+          <Box key={i} minW="100%" h="100%">
+            <VStack
+              justify="center"
+              h="100%"
+              spacing={4}
+            >
+              <Image
+                src={item.thumbnail}
+                alt={item.title}
+                h="250px"
+                objectFit="contain"
+              />
+              <Text fontSize="lg" fontWeight="bold">
+                {item.title}
+              </Text>
+              <Text fontSize="md" color="green.500">
+                ₹{item.price}
+              </Text>
+            </VStack>
+          </Box>
+        ))}
+      </Box>
 
-            <div>
-              <h2 className="font-semibold text-lg truncate">
-                {product.title}
-              </h2>
-              <p className="text-sm">Special Deal</p>
-              <p className="text-xl font-bold">₹{product.price}</p>
-            </div>
+      <IconButton
+        icon={<ArrowLeft />}
+        position="absolute"
+        left="15px"
+        top="50%"
+        transform="translateY(-50%)"
+        zIndex="2"
+        bg="white"
+        onClick={prev}
+      />
 
-            <button className="ml-auto bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:scale-105 transition">
-              Shop Now
-            </button>
-          </div>
-        </div>
-      )}
-    </header>
+      <IconButton
+        icon={<ArrowRight />}
+        position="absolute"
+        right="15px"
+        top="50%"
+        transform="translateY(-50%)"
+        zIndex="2"
+        bg="white"
+        onClick={next}
+      />
+    </Box>
   );
 }

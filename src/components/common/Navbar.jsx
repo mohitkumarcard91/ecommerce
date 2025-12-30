@@ -1,8 +1,7 @@
 import { Menu, ShoppingCart } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink,useNavigate } from "react-router-dom";
 
 import { selectUser } from "../../redux/slices/authSlice";
-import LogoutPage from "../../pages/LogoutPage";
 import LoginPage from "../../pages/LoginPage";
 import SearchBar from "./SearchBar";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function Navbar() {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
+  const navigate=useNavigate();
 
   const cart = useSelector((state) => state.products.cart);
 
@@ -27,15 +27,15 @@ export default function Navbar() {
         id="mobile-menu"
         className="hidden absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden"
       >
-        <a href="/" class="block">
+        <a href="/" className="block">
           Home
         </a>
 
-        <a href="/orderHistory" class="block">
+        <a href="/orderHistory" className="block">
           Order History
         </a>
         <button className="cursor-pointer px-6 py-2 mt-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full text-sm">
-          {user ? <LogoutPage /> : <LoginPage />}
+          {user ? user.email: <LoginPage />}
         </button>
       </div>
 
@@ -43,7 +43,7 @@ export default function Navbar() {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            isActive ? "underline text-blue-600" : ""
+            isActive ? " text-blue-600" : ""
           }
         >
           Home
@@ -52,7 +52,7 @@ export default function Navbar() {
         <NavLink
           to="/orderHistory"
           className={({ isActive }) =>
-            isActive ? "underline text-blue-600" : ""
+            isActive ? " text-blue-600" : ""
           }
         >
           Order History
@@ -70,13 +70,13 @@ export default function Navbar() {
           </a>
         </div>
 
-        <button
+        <button onClick={()=>navigate("/profile")}
           className="px-6 py-2 bg-indigo-600 text-white rounded-md 
              border border-blue-600 
              transition-all duration-300
              hover:bg-white hover:text-indigo-600"
         >
-          {user ? <LogoutPage /> : <LoginPage />}
+          {user ? user.email : <LoginPage />}
         </button>
       </div>
     </nav>

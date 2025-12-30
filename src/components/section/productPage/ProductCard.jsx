@@ -10,13 +10,28 @@ export default function ProductCard({ product }) {
   const navigate = useNavigate();
   const user = useSelector(selectUser);
 
+  const cartItems = useSelector((state) => state.products.cart);
+
   if (!product) return null;
+
+
+
+const isInCart =
+  user &&
+  cartItems?.some(
+    (item) => item.id === product.id
+  );
 
   const handleAddtoCart = (e) => {
     e.stopPropagation();
 
     if (!user) {
       alert("Please login first");
+      return;
+    }
+
+    if (isInCart) {
+      navigate("/cart");
       return;
     }
 
@@ -27,10 +42,10 @@ export default function ProductCard({ product }) {
       })
     );
 
-    toast("Item added to cart successfully!");
+    toast.success("Item added to cart successfully!");
   };
 
-  const handleCardClick = () => {
+  const handleCardClick = () => { 
     navigate(`/product/${product.id}`);
   };
 
@@ -39,13 +54,17 @@ export default function ProductCard({ product }) {
     const roundedRating = Math.round(rating * 2) / 2;
 
     for (let i = 1; i <= 5; i++) {
-      if (i <= roundedRating) {
-        stars.push(
-          <Star key={i} size={16} className="text-yellow-400 fill-yellow-400" />
-        );
-      } else {
-        stars.push(<Star key={i} size={16} className="text-gray-300" />);
-      }
+      stars.push(
+        <Star
+          key={i}
+          size={16}
+          className={
+            i <= roundedRating
+              ? "text-yellow-400 fill-yellow-400"
+              : "text-gray-300"
+          }
+        />
+      );
     }
 
     return stars;
@@ -56,7 +75,7 @@ export default function ProductCard({ product }) {
       onClick={handleCardClick}
       className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white max-w-56 cursor-pointer hover:shadow-md transition"
     >
-      <div className="group cursor-pointer flex items-center justify-center px-2">
+      <div className="group flex items-center justify-center px-2">
         <img
           className="group-hover:scale-105 transition max-w-[160px]"
           src={product.images?.[0]}
@@ -66,6 +85,7 @@ export default function ProductCard({ product }) {
 
       <div className="text-gray-500/60 text-sm">
         <p>{product.category}</p>
+
         <p className="text-gray-700 font-medium text-lg truncate">
           {product.title}
         </p>
@@ -77,14 +97,20 @@ export default function ProductCard({ product }) {
 
         <div className="flex items-end justify-between mt-2">
           <p className="md:text-xl text-base font-medium text-indigo-500">
-            ₹{product.price}{" "}
+            ₹{product.price}
           </p>
 
           <button
             onClick={handleAddtoCart}
-            className="flex items-center justify-center gap-1 bg-indigo-100 border border-indigo-300 md:w-[80px] w-[64px] h-[34px] rounded text-indigo-600 font-medium"
+            className={`flex items-center justify-center gap-1 
+              ${
+                isInCart
+                  ? "bg-green-100 border-green-300 text-green-600"
+                  : "bg-indigo-100 border-indigo-300 text-indigo-600"
+              }
+              border md:w-[96px] w-[80px] h-[34px] rounded font-medium`}
           >
-            Add
+            {isInCart ? "Go to Cart" : "Add"}
           </button>
         </div>
       </div>

@@ -14,7 +14,10 @@ export default function LogoutPage() {
   };
 
   return (
-    <div>
+    <div  className="px-6 py-2 bg-indigo-600 text-white rounded-md 
+             border border-blue-600 
+             transition-all duration-300
+             hover:bg-white hover:text-indigo-600">
       <button onClick={() => setModal(true)}>Logout</button>
 
       {modal && (
