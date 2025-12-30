@@ -69,7 +69,6 @@ export default function Navbar() {
           </div>
         )}
 
-        {/* DESKTOP MENU */}
         <div className="hidden sm:flex items-center gap-8">
           <NavLink
             to="/"
@@ -104,15 +103,13 @@ export default function Navbar() {
           </div>
 
           <button
-            onClick={() =>
-              user ? setProfileOpen(true) : setLoginOpen(true)
-            }
-            className="px-5 py-2 bg-indigo-600 text-white rounded-md 
-            border border-indigo-600 transition-all duration-300
-            hover:bg-white hover:text-indigo-600"
+            onClick={() => (user ? setProfileOpen(true) : setLoginOpen(true))}
+            className="px-5 py-2 bg-indigo-600 text-white rounded-md
+  border border-indigo-600 transition-all duration-300
+  hover:bg-white hover:text-indigo-600"
           >
             {user ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-inherit">
                 <User className="w-5 h-5" />
                 {user.email.split("@")[0]}
               </div>
@@ -123,14 +120,9 @@ export default function Navbar() {
         </div>
       </nav>
 
-      <ProfilePage
-        isOpen={profileOpen}
-        onClose={() => setProfileOpen(false)}
-      />
+      <ProfilePage isOpen={profileOpen} onClose={() => setProfileOpen(false)} />
 
-      {loginOpen && (
-        <LoginPage onClose={() => setLoginOpen(false)} />
-      )}
+      {loginOpen && <LoginPage onClose={() => setLoginOpen(false)} />}
     </>
   );
 }

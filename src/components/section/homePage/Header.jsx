@@ -1,11 +1,10 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
-import { Box, Image, IconButton, Text, VStack } from "@chakra-ui/react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { ArrowRight,ArrowLeft } from "lucide-react";
 
 export default function Header() {
   const [products, setProducts] = useState([]);
-  const [index, setIndex] = useState(1);
+  const [index, setIndex] = useState(0);
   const intervalRef = useRef(null);
 
   useEffect(() => {
@@ -22,97 +21,65 @@ export default function Header() {
     fetchProducts();
   }, []);
 
-  const slides =
-    products.length > 0
-      ? [products[products.length - 1], ...products, products[0]]
-      : [];
-
-  const startAutoScroll = () => {
-    intervalRef.current = setInterval(() => {
-      setIndex((prev) => prev + 1);
-    }, 1000);
-  };
-
-  const stopAutoScroll = () => {
-    clearInterval(intervalRef.current);
-  };
-
   useEffect(() => {
-    if (products.length) startAutoScroll();
-    return stopAutoScroll;
+    intervalRef.current = setInterval(() => {
+      setIndex((prev) => (prev + 1) % products.length);
+    }, 3000);
+
+    return () => clearInterval(intervalRef.current);
   }, [products]);
 
-  const handleTransitionEnd = () => {
-    if (index === slides.length - 1) {
-      setIndex(1);
-    }
-    if (index === 0) {
-      setIndex(slides.length - 2);
-    }
+  const prevSlide = () => {
+    setIndex((prev) => (prev - 1 + products.length) % products.length);
   };
 
-  const next = () => setIndex((i) => i + 1);
-  const prev = () => setIndex((i) => i - 1);
+  const nextSlide = () => {
+    setIndex((prev) => (prev + 1) % products.length);
+  };
 
   return (
-    <Box
-      className="mb-3"
-      position="relative"
-      w="full"
-      h="350px"
-      overflow="hidden"
-      bg="gray.100"
-      onMouseEnter={stopAutoScroll}
-      onMouseLeave={startAutoScroll}
-    >
-      <Box
-        display="flex"
-        h="100%"
-        transform={`translateX(-${index * 100}%)`}
-        transition="transform 0.6s ease"
-        onTransitionEnd={handleTransitionEnd}
+    <div className="relative mb-2 z-2 h-[350px] bg-black overflow-hidden">
+      {products.map((item, i) => (
+        <div
+          key={item.id}
+          className={`absolute inset-0 flex flex-col items-center justify-center transition-transform duration-700 ${
+            i === index ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <img
+            src={item.thumbnail}
+            alt={item.title}
+            className="h-[240px] object-contain"
+          />
+          <h5 className="text-white mt-3 font-bold">{item.title}</h5>
+          <p className="text-white text-lg">₹{item.price}</p>
+        </div>
+      ))}
+
+      <button
+        onClick={prevSlide}
+        className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-80"
       >
-        {slides.map((item, i) => (
-          <Box key={i} minW="100%" h="100%">
-            <VStack justify="center" h="100%" spacing={4}>
-              <Image
-                src={item.thumbnail}
-                alt={item.title}
-                h="250px"
-                objectFit="contain"
-              />
-              <Text fontSize="lg" fontWeight="bold">
-                {item.title}
-              </Text>
-              <Text fontSize="md" color="green.500">
-                ₹{item.price}
-              </Text>
-            </VStack>
-          </Box>
+       <ArrowLeft size={20} />
+      </button>
+      <button
+        onClick={nextSlide}
+        className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-80"
+      >
+       <ArrowRight size={20} />
+      </button>
+
+      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        {products.map((_, i) => (
+          <span
+            key={i}
+            className={`w-3 h-3 rounded-full ${
+              i === index ? "bg-white" : "bg-gray-400"
+            }`}
+            onClick={() => setIndex(i)}
+          ></span>
         ))}
-      </Box>
-
-      <IconButton
-        icon={<ArrowLeft />}
-        position="absolute"
-        left="15px"
-        top="50%"
-        transform="translateY(-50%)"
-        zIndex="2"
-        bg="white"
-        onClick={prev}
-      />
-
-      <IconButton
-        icon={<ArrowRight />}
-        position="absolute"
-        right="15px"
-        top="50%"
-        transform="translateY(-50%)"
-        zIndex="2"
-        bg="white"
-        onClick={next}
-      />
-    </Box>
+      </div>
+    </div>
   );
 }

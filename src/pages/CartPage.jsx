@@ -45,7 +45,6 @@ const CartPage = () => {
             key={product.id}
             className="grid grid-cols-[2fr_1fr_1fr] items-center pt-4"
           >
-            {/* PRODUCT INFO */}
             <div className="flex gap-4">
               <div className="w-24 h-24 border rounded overflow-hidden">
                 <img

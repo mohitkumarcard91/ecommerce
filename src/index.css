@@ -2,3 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+a {
+  text-decoration: none !important;
+}
+a:hover {
+  color: inherit !important;
+}
