@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import { ArrowRight,ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 
 export default function Header() {
   const [products, setProducts] = useState([]);
@@ -42,7 +42,7 @@ export default function Header() {
       {products.map((item, i) => (
         <div
           key={item.id}
-          className={`absolute inset-0 flex flex-col items-center justify-center transition-transform duration-700 ${
+          className={`absolute inset-0 flex flex-col items-center justify-center transition-transform duration-2000 ${
             i === index ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -60,13 +60,13 @@ export default function Header() {
         onClick={prevSlide}
         className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-80"
       >
-       <ArrowLeft size={20} />
+        <ArrowLeft size={20} />
       </button>
       <button
         onClick={nextSlide}
         className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-80"
       >
-       <ArrowRight size={20} />
+        <ArrowRight size={20} />
       </button>
 
       <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">

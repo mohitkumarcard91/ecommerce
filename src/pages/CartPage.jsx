@@ -91,7 +91,9 @@ const CartPage = () => {
               </div>
             </div>
 
-            <p className="text-center">₹{product.price * product.quantity}</p>
+            <p className="text-center">
+              ₹{product.price.toFixed(2) * product.quantity}
+            </p>
 
             <button
               onClick={() =>

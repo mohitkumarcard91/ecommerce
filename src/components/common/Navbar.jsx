@@ -120,7 +120,11 @@ export default function Navbar() {
         </div>
       </nav>
 
-      <ProfilePage isOpen={profileOpen} onClose={() => setProfileOpen(false)} />
+      <ProfilePage
+        isOpen={profileOpen}
+        onClose={() => setProfileOpen(false)}
+        user={`${user.email.split("@")[0]}`}
+      />
 
       {loginOpen && <LoginPage onClose={() => setLoginOpen(false)} />}
     </>
