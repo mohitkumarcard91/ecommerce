@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 import { toast, Bounce } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { signup } from "../redux/slices/authSlice";
+import userSchema from "../constant/validation";
 
 export default function SignupPage() {
   const dispatch = useDispatch();
@@ -12,7 +15,9 @@ export default function SignupPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+  resolver: yupResolver(userSchema), 
+});
 
   const onSubmit = (data) => {
     const allUsers = JSON.parse(localStorage.getItem("registerUser")) || [];
