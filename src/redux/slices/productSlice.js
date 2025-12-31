@@ -1,42 +1,55 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { API_BASE_URL } from "../../constant/config";
+
+const safeParse = (value, fallback) => {
+  try {
+    return value ? JSON.parse(value) : fallback;
+  } catch (error) {
+    return fallback;
+  }
+};
+
 
 const getUserData = (key, userEmail) => {
-  const data = JSON.parse(localStorage.getItem(key)) || {};
+  const data = safeParse(localStorage.getItem(key), {});
   return data[userEmail] || [];
 };
 
+
 const setUserData = (key, userEmail, value) => {
-  const data = JSON.parse(localStorage.getItem(key)) || {};
+  const data = safeParse(localStorage.getItem(key), {});
   data[userEmail] = value;
   localStorage.setItem(key, JSON.stringify(data));
 };
+
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`https://dummyjson.com/products`);
+      const response = await axios.get("https://dummyjson.com/products");
       return response.data.products;
-    } catch (err) {
+    } catch (error) {
       return rejectWithValue("Failed to fetch products");
     }
   }
 );
 
+
 const initialState = {
-  allProducts: JSON.parse(localStorage.getItem("allProducts")) || [],
+  allProducts: safeParse(localStorage.getItem("allProducts"), []),
   cart: [],
   wishlist: [],
   loading: false,
   error: null,
 };
 
+
 const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
+   
     loadUserData(state, action) {
       const userEmail = action.payload;
       state.cart = getUserData("cartItem", userEmail);
@@ -45,7 +58,6 @@ const productsSlice = createSlice({
 
     addToCart(state, action) {
       const { userEmail, product } = action.payload;
-
       let cartProducts = getUserData("cartItem", userEmail);
 
       const existingProduct = cartProducts.find(
@@ -55,16 +67,14 @@ const productsSlice = createSlice({
       if (existingProduct) {
         existingProduct.quantity += 1;
       } else {
-        cartProducts.push({
-          ...product,
-          quantity: 1,
-        });
+        cartProducts.push({ ...product, quantity: 1 });
       }
 
       setUserData("cartItem", userEmail, cartProducts);
-
       state.cart = cartProducts;
     },
+
+  
     increaseQuantity(state, action) {
       const { userEmail, productId } = action.payload;
       let cart = getUserData("cartItem", userEmail);
@@ -76,6 +86,7 @@ const productsSlice = createSlice({
       state.cart = cart;
     },
 
+   
     decreaseQuantity(state, action) {
       const { userEmail, productId } = action.payload;
       let cart = getUserData("cartItem", userEmail);
@@ -86,26 +97,35 @@ const productsSlice = createSlice({
       setUserData("cartItem", userEmail, cart);
       state.cart = cart;
     },
-    clearCart(state, action) {
-  const userEmail = action.payload;
-  const data = JSON.parse(localStorage.getItem("cartItem")) || {};
-  data[userEmail] = [];
-  localStorage.setItem("cartItem", JSON.stringify(data));
-  state.cart = [];
-}
-,
+
+   
     removeFromCart(state, action) {
       const { userEmail, productId } = action.payload;
       let cartProducts = getUserData("cartItem", userEmail);
+
       cartProducts = cartProducts.filter((p) => p.id !== productId);
+
       setUserData("cartItem", userEmail, cartProducts);
       state.cart = cartProducts;
     },
 
+   
+    clearCart(state, action) {
+      const userEmail = action.payload;
+      const data = safeParse(localStorage.getItem("cartItem"), {});
+      data[userEmail] = [];
+      localStorage.setItem("cartItem", JSON.stringify(data));
+      state.cart = [];
+    },
+
+   
     toggleWishlist(state, action) {
       const { userEmail, product } = action.payload;
       let wishlistProducts = getUserData("wishlistItem", userEmail);
-      const index = wishlistProducts.findIndex((p) => p.id === product.id);
+
+      const index = wishlistProducts.findIndex(
+        (p) => p.id === product.id
+      );
 
       if (index >= 0) wishlistProducts.splice(index, 1);
       else wishlistProducts.push(product);
@@ -124,7 +144,10 @@ const productsSlice = createSlice({
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.allProducts = action.payload;
-        localStorage.setItem("allProducts", JSON.stringify(action.payload));
+        localStorage.setItem(
+          "allProducts",
+          JSON.stringify(action.payload)
+        );
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
@@ -139,8 +162,7 @@ export const {
   addToCart,
   removeFromCart,
   toggleWishlist,
-    clearCart,
-
+  clearCart,
   loadUserData,
   increaseQuantity,
   decreaseQuantity,
