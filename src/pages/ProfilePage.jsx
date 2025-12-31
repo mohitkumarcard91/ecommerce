@@ -118,7 +118,6 @@ export default function ProfilePage({ isOpen, onClose }) {
   );
 }
 
-
 // import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 // import { NavLink } from 'react-router-dom'
 
@@ -150,8 +149,7 @@ export default function ProfilePage({ isOpen, onClose }) {
 //               Support
 //             </a>
 //           </MenuItem>
-         
-         
+
 //         </div>
 //       </MenuItems>
 //     </Menu>

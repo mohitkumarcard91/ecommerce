@@ -38,48 +38,33 @@ export default function Header() {
   };
 
   return (
-    <div className="relative mb-2 z-2 h-[350px] bg-black overflow-hidden">
-      {products.map((item, i) => (
-        <div
-          key={item.id}
-          className={`absolute inset-0 flex flex-col items-center justify-center transition-transform duration-2000 ${
-            i === index ? "translate-x-0" : "translate-x-full"
-          }`}
-        >
-          <img
-            src={item.thumbnail}
-            alt={item.title}
-            className="h-[240px] object-contain"
-          />
-          <h5 className="text-white mt-3 font-bold">{item.title}</h5>
-          <p className="text-white text-lg">₹{item.price}</p>
-        </div>
-      ))}
-
-      <button
-        onClick={prevSlide}
-        className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-80"
-      >
-        <ArrowLeft size={20} />
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-80"
-      >
-        <ArrowRight size={20} />
-      </button>
-
-      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {products.map((_, i) => (
-          <span
-            key={i}
-            className={`w-3 h-3 rounded-full ${
-              i === index ? "bg-white" : "bg-gray-400"
-            }`}
-            onClick={() => setIndex(i)}
-          ></span>
-        ))}
+   <div className="relative overflow-hidden h-[350px] bg-black">
+  <div
+    className="flex transition-transform duration-500"
+    style={{ transform: `translateX(-${index * 100}%)` }}
+  >
+    {products.map((item) => (
+      <div key={item.id} className="flex-shrink-0 w-full flex flex-col items-center justify-center">
+        <img src={item.thumbnail} alt={item.title} className="h-[240px] object-contain" />
+        <h5 className="text-white mt-3 font-bold">{item.title}</h5>
+        <p className="text-white text-lg">₹{item.price}</p>
       </div>
-    </div>
+    ))}
+  </div>
+
+  <button
+    onClick={prevSlide}
+    className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-80"
+  >
+    <ArrowLeft size={20} />
+  </button>
+  <button
+    onClick={nextSlide}
+    className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 hover:bg-opacity-80"
+  >
+    <ArrowRight size={20} />
+  </button>
+</div>
+
   );
 }

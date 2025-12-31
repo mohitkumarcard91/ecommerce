@@ -53,6 +53,7 @@ export default function Navbar() {
                 }}
                 className="px-4 py-2 bg-indigo-600 text-white rounded-md"
               >
+                <User className="w-5 h-5" />
                 {user.email.split("@")[0]}
               </button>
             ) : (
@@ -130,3 +131,11 @@ export default function Navbar() {
     </>
   );
 }
+
+
+
+
+
+
+
+

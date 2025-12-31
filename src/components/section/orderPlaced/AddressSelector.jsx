@@ -1,38 +1,30 @@
-import { useState } from "react";
-
 export default function AddressSelector({
   selectedAddress,
   setSelectedAddress,
 }) {
-  const [open, setOpen] = useState(false);
-
   const addresses = ["New York, USA", "Delhi, India", "Mumbai, India"];
 
   return (
-    <div className="relative">
-      <div className="flex justify-between mt-2">
-        <p className="text-gray-500">{selectedAddress || "No address found"}</p>
-        <button onClick={() => setOpen(!open)} className="text-indigo-500">
-          Change
-        </button>
-      </div>
+    <div className="mt-2">
+      <label className="block text-sm text-gray-500 mb-1">
+        Select Address
+      </label>
 
-      {open && (
-        <div className="absolute top-10 bg-white border w-full shadow-md z-10">
-          {addresses.map((addr, i) => (
-            <p
-              key={i}
-              onClick={() => {
-                setSelectedAddress(addr);
-                setOpen(false);
-              }}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-            >
-              {addr}
-            </p>
-          ))}
-        </div>
-      )}
+      <select
+        value={selectedAddress || ""}
+        onChange={(e) => setSelectedAddress(e.target.value)}
+        className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      >
+        <option value="" disabled>
+          No address found
+        </option>
+
+        {addresses.map((addr, i) => (
+          <option key={i} value={addr}>
+            {addr}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

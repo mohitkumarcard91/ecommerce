@@ -60,7 +60,7 @@ export default function OrderSummary({ totalAmount, cartItems }) {
         className="w-full border px-3 py-2 mt-2"
       >
         <option>Cash On Delivery</option>
-         <option>Cash On Delivery</option>
+        <option>Online Payment</option>
       </select>
 
       <hr className="my-5" />
