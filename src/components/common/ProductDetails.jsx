@@ -8,7 +8,7 @@ import { addToCart } from "../../redux/slices/productSlice";
 import { selectUser } from "../../redux/slices/authSlice";
 import ProductSkeleton from "./ProductSkeleton";
 
-export default function Card() {
+export default function ProductDetails() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();

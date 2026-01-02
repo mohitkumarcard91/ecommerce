@@ -19,7 +19,7 @@ const SignupPage = lazy(() => import("./pages/SignupPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
-const Card = lazy(() => import("./components/common/Card"));
+const ProductDetails = lazy(() => import("./components/common/ProductDetails"));
 const Successfull = lazy(() =>
   import("./components/section/orderPlaced/Successfull")
 );
@@ -101,7 +101,7 @@ function App() {
                 path="/product/:id"
                 element={
                   <ProtectedRoute>
-                    <Card />
+                    <ProductDetails />
                   </ProtectedRoute>
                 }
               />
