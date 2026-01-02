@@ -73,7 +73,7 @@ export default function Products() {
     <div className="flex flex-col gap-1">
       <Header />
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8  gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6  gap-2">
         {currentProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
