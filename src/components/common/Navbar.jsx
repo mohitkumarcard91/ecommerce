@@ -98,9 +98,13 @@ export default function Navbar() {
             onClick={() => navigate("/cart")}
           >
             <ShoppingCart className="w-8 h-8" />
-            <span className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full flex items-center justify-center">
-              {cart.length}
-            </span>
+            {cart.length === 0 ? (
+              ""
+            ) : (
+              <span className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full flex items-center justify-center">
+                {cart.length}
+              </span>
+            )}
           </div>
 
           <button
@@ -131,11 +135,3 @@ export default function Navbar() {
     </>
   );
 }
-
-
-
-
-
-
-
-

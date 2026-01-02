@@ -72,52 +72,57 @@ export default function Products() {
   return (
     <div className="flex flex-col gap-1">
       <Header />
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8  gap-2">
         {currentProducts.map((product) => (
-          <ProductCard product={product} />
+          <ProductCard key={product.id} product={product} />
         ))}
+      </div>
 
-        <div className="fixed bottom-0 left-0 right-0 bg-slate-800 border-t border-slate-700 py-4">
-          <div className="flex justify-center items-center gap-2">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((prev) => prev - 1)}
-              className="px-4 py-2 rounded-lg bg-slate-700 text-amber-50 disabled:opacity-50"
-            >
-              Prev
-            </button>
-            {getPagination().map((item, index) =>
-              item === "..." ? (
-                <span
-                  key={`dots-${index}`}
-                  className="px-3 py-2 text-amber-300 font-bold"
-                >
-                  ...
-                </span>
-              ) : (
-                <button
-                  key={item}
-                  onClick={() => setCurrentPage(item)}
-                  className={`px-4 py-2 rounded-lg font-medium ${
-                    currentPage === item
-                      ? "bg-amber-400 text-black"
-                      : "bg-slate-700 text-amber-50"
-                  }`}
-                >
-                  {item}
-                </button>
-              )
-            )}
+      <div className="flex justify-center items-center gap-2 mt-10 mb-6">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((p) => p - 1)}
+          className="px-4 py-2 rounded-md border text-sm font-medium
+        disabled:opacity-40 disabled:cursor-not-allowed
+        hover:bg-gray-100"
+        >
+          Prev
+        </button>
 
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((prev) => prev + 1)}
-              className="px-4 py-2 rounded-lg bg-slate-700 text-amber-50 disabled:opacity-50"
+        {getPagination().map((item, index) =>
+          item === "..." ? (
+            <span
+              key={`dots-${index}`}
+              className="px-3 py-2 text-gray-400 font-semibold"
             >
-              Next
+              ...
+            </span>
+          ) : (
+            <button
+              key={item}
+              onClick={() => setCurrentPage(item)}
+              className={`w-9 h-9 rounded-md text-sm font-medium transition
+            ${
+              currentPage === item
+                ? "bg-indigo-500 text-white shadow"
+                : "border hover:bg-gray-100"
+            }`}
+            >
+              {item}
             </button>
-          </div>
-        </div>
+          )
+        )}
+
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((p) => p + 1)}
+          className="px-4 py-2 rounded-md border text-sm font-medium
+        disabled:opacity-40 disabled:cursor-not-allowed
+        hover:bg-gray-100"
+        >
+          Next
+        </button>
       </div>
     </div>
   );

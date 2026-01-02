@@ -9,19 +9,16 @@ const safeParse = (value, fallback) => {
   }
 };
 
-
 const getUserData = (key, userEmail) => {
   const data = safeParse(localStorage.getItem(key), {});
   return data[userEmail] || [];
 };
-
 
 const setUserData = (key, userEmail, value) => {
   const data = safeParse(localStorage.getItem(key), {});
   data[userEmail] = value;
   localStorage.setItem(key, JSON.stringify(data));
 };
-
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
@@ -35,7 +32,6 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-
 const initialState = {
   allProducts: safeParse(localStorage.getItem("allProducts"), []),
   cart: [],
@@ -44,12 +40,10 @@ const initialState = {
   error: null,
 };
 
-
 const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
-   
     loadUserData(state, action) {
       const userEmail = action.payload;
       state.cart = getUserData("cartItem", userEmail);
@@ -74,7 +68,6 @@ const productsSlice = createSlice({
       state.cart = cartProducts;
     },
 
-  
     increaseQuantity(state, action) {
       const { userEmail, productId } = action.payload;
       let cart = getUserData("cartItem", userEmail);
@@ -86,7 +79,6 @@ const productsSlice = createSlice({
       state.cart = cart;
     },
 
-   
     decreaseQuantity(state, action) {
       const { userEmail, productId } = action.payload;
       let cart = getUserData("cartItem", userEmail);
@@ -98,7 +90,6 @@ const productsSlice = createSlice({
       state.cart = cart;
     },
 
-   
     removeFromCart(state, action) {
       const { userEmail, productId } = action.payload;
       let cartProducts = getUserData("cartItem", userEmail);
@@ -109,7 +100,6 @@ const productsSlice = createSlice({
       state.cart = cartProducts;
     },
 
-   
     clearCart(state, action) {
       const userEmail = action.payload;
       const data = safeParse(localStorage.getItem("cartItem"), {});
@@ -118,14 +108,11 @@ const productsSlice = createSlice({
       state.cart = [];
     },
 
-   
     toggleWishlist(state, action) {
       const { userEmail, product } = action.payload;
       let wishlistProducts = getUserData("wishlistItem", userEmail);
 
-      const index = wishlistProducts.findIndex(
-        (p) => p.id === product.id
-      );
+      const index = wishlistProducts.findIndex((p) => p.id === product.id);
 
       if (index >= 0) wishlistProducts.splice(index, 1);
       else wishlistProducts.push(product);
@@ -144,10 +131,7 @@ const productsSlice = createSlice({
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.allProducts = action.payload;
-        localStorage.setItem(
-          "allProducts",
-          JSON.stringify(action.payload)
-        );
+        localStorage.setItem("allProducts", JSON.stringify(action.payload));
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;

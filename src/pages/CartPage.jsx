@@ -18,13 +18,41 @@ const CartPage = () => {
   const [showAddress, setShowAddress] = useState(false);
 
   if (!cart.length) {
-    return <p className="text-center mt-10">Cart is empty</p>;
+    return (
+      <div className="flex flex-col py-16 max-w-6xl w-full px-6 mx-auto">
+        <p className="text-center mt-10">Cart is empty</p>
+        <button
+          onClick={() => navigate("/")}
+          className="mt-8 text-indigo-500 font-medium"
+        >
+          ← Continue Shopping
+        </button>
+      </div>
+    );
   }
 
   const totalAmount = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+
+  const handleIncreaseQuantity = (productId) => {
+    dispatch(
+      increaseQuantity({
+        userEmail: user.email,
+        productId,
+      })
+    );
+  };
+
+  const handleDecreaseQuantity = (productId) => {
+    dispatch(
+      decreaseQuantity({
+        userEmail: user.email,
+        productId,
+      })
+    );
+  };
 
   return (
     <div className="flex flex-col md:flex-row py-16 max-w-6xl w-full px-6 mx-auto">
@@ -59,14 +87,7 @@ const CartPage = () => {
 
                 <div className="flex items-center gap-2 mt-2">
                   <button
-                    onClick={() =>
-                      dispatch(
-                        decreaseQuantity({
-                          userEmail: user.email,
-                          productId: product.id,
-                        })
-                      )
-                    }
+                    onClick={() => handleDecreaseQuantity(product.id)}
                     className="px-2 border"
                   >
                     −
@@ -75,14 +96,7 @@ const CartPage = () => {
                   <span>{product.quantity}</span>
 
                   <button
-                    onClick={() =>
-                      dispatch(
-                        increaseQuantity({
-                          userEmail: user.email,
-                          productId: product.id,
-                        })
-                      )
-                    }
+                    onClick={() => handleIncreaseQuantity(product.id)}
                     className="px-2 border"
                   >
                     +
@@ -92,7 +106,7 @@ const CartPage = () => {
             </div>
 
             <p className="text-center">
-              ₹{product.price.toFixed(2) * product.quantity}
+              ₹{(product.price * product.quantity).toFixed(2)}
             </p>
 
             <button
